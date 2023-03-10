@@ -21,7 +21,7 @@ echo $pluginsToBeUpdatedRaw | jq -c '.[]' | while read object; do
 
 	git checkout $baseBranch &&\
 
-	git checkout -b "update-plugin/$pluginToBeUpdated-$lowerVersion-$upperVersion" &&\
+	git checkout -b "update-plugin/$baseBranch-$pluginToBeUpdated-$lowerVersion-$upperVersion" &&\
 
 	## Not using WP-CLI because it is causing the loop to end, and couldn't find any reason for that.
 	# $prefix wp plugin update $pluginToBeUpdated --version=$upperVersion
@@ -38,8 +38,8 @@ echo $pluginsToBeUpdatedRaw | jq -c '.[]' | while read object; do
 
 	git commit -m "chore: Update $pluginToBeUpdated plugin from version $lowerVersion to $upperVersion" &&\
 
-	git push origin update-plugin/$pluginToBeUpdated-$lowerVersion-$upperVersion &&\
+	git push origin update-plugin/$baseBranch-$pluginToBeUpdated-$lowerVersion-$upperVersion &&\
 
-	gh pr create --base $baseBranch --head update-plugin/$pluginToBeUpdated-$lowerVersion-$upperVersion --title "Update $pluginToBeUpdated plugin from version $lowerVersion to $upperVersion" --body ""
+	gh pr create --base $baseBranch --head update-plugin/$baseBranch-$pluginToBeUpdated-$lowerVersion-$upperVersion --title "[$baseBranch] Update $pluginToBeUpdated plugin from version $lowerVersion to $upperVersion" --body "[do-not-scan]"
 
 done
